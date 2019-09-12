@@ -1,0 +1,245 @@
+# Default config for sway
+#
+# Copy this to ~/.config/sway/config and edit it to your liking.
+#
+# Read `man 5 sway` for a complete reference.
+
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+# Your preferred terminal emulator
+set $term alacritty
+# Your preferred application launcher
+# Note: it's recommended that you pass the final command to sway
+set $dmenu dmenu_path | dmenu | xargs swaymsg exec --
+set $menu  "rofi -i -modi drun,run,window -show drun"
+
+### Output configuration
+#
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+output eDP-1 resolution 2160x1440 position 0,0
+
+### Idle configuration
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+exec swayidle -w \
+        resume 'swaymsg "output * dpms on"' \
+         before-sleep 'swaylock -f -c 000000'
+
+### Input configuration
+input * {
+    xkb_layout fr
+}
+
+input "1267:12496:ELAN962C:00_04F3:30D0_Touchpad" {
+    dwt enabled
+    tap enabled
+    natural_scroll enabled
+    middle_emulation enabled
+}
+
+### Key bindings
+#
+# Basics:
+#
+    # start a terminal
+    bindsym $mod+Return exec $term
+
+    # kill focused window
+    bindsym $mod+q kill
+
+    # start your launcher
+    bindsym $mod+Shift+d exec $dmenu
+    bindsym $mod+d exec $menu
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # reload the configuration file
+    bindsym $mod+Shift+c reload
+
+#
+# Moving around:
+#
+    # Move your focus around
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+    # or use $mod+[up|down|left|right]
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    # _move_ the focused window with the same, but add Shift
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+    # ditto, with arrow keys
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+#
+# Workspaces:
+#
+    # switch to workspace
+    bindsym $mod+ampersand	workspace 1
+    bindsym $mod+eacute		workspace 2
+    bindsym $mod+quotedbl	workspace 3
+    bindsym $mod+apostrophe	workspace 4
+    bindsym $mod+parenleft	workspace 5
+    bindsym $mod+minus		workspace 6
+    bindsym $mod+egrave		workspace 7
+    bindsym $mod+underscore	workspace 8
+    bindsym $mod+ccedilla	workspace 9
+    bindsym $mod+agrave		workspace 10
+    # move focused container to workspace
+    bindsym $mod+Shift+ampersand	move container to workspace 1
+    bindsym $mod+Shift+eacute		move container to workspace 2
+    bindsym $mod+Shift+quotedbl		move container to workspace 3
+    bindsym $mod+Shift+apostrophe	move container to workspace 4
+    bindsym $mod+Shift+parenleft	move container to workspace 5
+    bindsym $mod+Shift+minus		move container to workspace 6
+    bindsym $mod+Shift+egrave		move container to workspace 7
+    bindsym $mod+Shift+underscore	move container to workspace 8
+    bindsym $mod+Shift+ccedilla		move container to workspace 9
+    bindsym $mod+Shift+agrave		move container to workspace 10
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    # respectively.
+    bindsym $mod+b splith
+    bindsym $mod+v splitv
+
+    # Switch the current container between different layout styles
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+    bindsym $mod+e layout toggle split
+
+    # Make the current focus fullscreen
+    bindsym $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    bindsym $mod+Shift+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    bindsym $mod+space focus mode_toggle
+
+    # move focus to the parent container
+    bindsym $mod+a focus parent
+
+
+#
+# Set system mode features
+#
+    set $mode_system "(l)ock, (e)xit, (r)eboot, (Shift+s)hutdown"
+    bindsym $mod+Shift+e mode $mode_system
+
+    mode $mode_system {
+        bindsym l exec --no-startup-id swaylock -f -c 000000, mode "default"
+        bindsym e exec --no-startup-id swaymsg exit, mode "default"
+        bindsym r exec --no-startup-id loginctl reboot, mode "default"
+        bindsym Shift+s exec --no-startup-id loginctl poweroff, mode "default"
+    
+        # exit system mode: Enter" or "Escape"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+    }
+
+#
+# Resizing containers:
+#
+    bindsym $mod+r mode "resize"
+    mode "resize" {
+        # left will shrink the containers width
+        # right will grow the containers width
+        # up will shrink the containers height
+        # down will grow the containers height
+        bindsym $left resize shrink width 10px
+        bindsym $down resize grow height 10px
+        bindsym $up resize shrink height 10px
+        bindsym $right resize grow width 10px
+    
+        # ditto, with arrow keys
+        bindsym Left resize shrink width 10px
+        bindsym Down resize grow height 10px
+        bindsym Up resize shrink height 10px
+        bindsym Right resize grow width 10px
+    
+        # return to default mode
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+    }
+
+#
+# Status Bar:
+#
+# Read `man 5 sway-bar` for more information about this section.
+bar {
+    position top
+
+    tray_output primary
+    status_command i3status
+
+    colors {
+        separator #65737E
+        background #1B2B34
+        statusline #D8DEE9
+
+        # Color of border, background, and text
+        focused_workspace       #6699CC #6699CC #373737
+        active_workspace        #5FB3B3 #5FB3B3 #373737
+        inactive_workspace      #343D46 #343D46 #D8DEE9
+        urgent_workspace        #EC5F67 #EC5F67 #373737
+    }
+}
+
+# Window rules, you can find the window class using xprop
+default_border pixel 1
+default_floating_border normal
+
+hide_edge_borders none
+
+for_window [class="^.*"] border pixel 0
+
+# Color of border, background, text, indicator, and child_border
+client.focused              #6699CC #6699CC #373737 #6699CC #6699CC
+client.focused_inactive     #5FB3B3 #5FB3B3 #D8DEE9 #A7ADBA #6699CC
+client.unfocused            #343D46 #343D46 #D8DEE9 #343D46 #6699CC
+client.urgent               #EC5F67 #EC5F67 #1B2B34 #EC5F67 #6699CC
+client.background           #5FB3B3
+
+# Screenshot controls
+bindsym Print exec grim - | wl-copy
+bindsym Shift+Print exec grim -g "$(slurp)" - | wl-copy
+
+# Volume controls
+bindsym XF86AudioRaiseVolume exec amixer -q set Master 5%+
+bindsym XF86AudioLowerVolume exec amixer -q set Master 5%-
+bindsym XF86AudioMute exec amixer set Master toggle
+
+# Brightness controls
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
+
+# Programs to launch at startup
+exec --no-startup-id nm-applet
+
+include /etc/sway/config.d/*
