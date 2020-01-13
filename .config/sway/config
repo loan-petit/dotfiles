@@ -155,8 +155,8 @@ input "1267:12496:ELAN962C:00_04F3:30D0_Touchpad" {
     mode $mode_system {
         bindsym l exec --no-startup-id swaylock -f -c 000000, mode "default"
         bindsym e exec --no-startup-id swaymsg exit, mode "default"
-        bindsym r exec --no-startup-id loginctl reboot, mode "default"
-        bindsym Shift+s exec --no-startup-id loginctl poweroff, mode "default"
+        bindsym r exec --no-startup-id systemctl reboot, mode "default"
+        bindsym Shift+s exec --no-startup-id systemctl poweroff, mode "default"
     
         # exit system mode: Enter" or "Escape"
         bindsym Return mode "default"
@@ -228,7 +228,7 @@ client.background           #5FB3B3
 
 # Screenshot controls
 bindsym Print exec grim - | wl-copy
-bindsym Shift+Print exec grim -g "$(slurp)" - | wl-copy
+bindsym $mod+p exec grim -g "$(slurp)" - | wl-copy
 
 # Volume controls
 bindsym XF86AudioRaiseVolume exec amixer -q set Master 5%+
